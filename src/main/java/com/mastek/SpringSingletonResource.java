@@ -39,13 +39,8 @@
  */
 package com.mastek;
 
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.google.gson.Gson;
-
-import dto.NotificationPayload;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -57,6 +52,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.google.gson.Gson;
+
+import dto.NotificationPayload;
+import util.GenerateNotification;
 
 @Path("spring-singleton-hello")
 @Component
@@ -82,6 +85,13 @@ public class SpringSingletonResource {
     	Gson gson = new Gson();
     	NotificationPayload payload = gson.fromJson(data, NotificationPayload.class);
     	String result = "Data post : "+ payload.getName();
+    	
+    	try {
+			result = GenerateNotification.generateNotification();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
     	return Response.status(201).entity(result).build(); 
     }
     
