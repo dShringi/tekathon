@@ -40,7 +40,13 @@
 package com.mastek;
 
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Component;
+
+import util.GenerateNotification;
 
 import com.google.gson.Gson;
 
@@ -63,8 +69,10 @@ public class EventSourceImpl implements EventSource {
 	public String getevent(String srcevent) {
 		
 		Gson gson = new Gson();
+		
 		SourceEvent srcEvnt = gson.fromJson(srcevent, SourceEvent.class);
         
+		
 		System.out.println(srcEvnt.getEventCategory());
         System.out.println(srcEvnt.getEventType());
         System.out.println(srcEvnt.getAccountNumber());
@@ -79,11 +87,16 @@ public class EventSourceImpl implements EventSource {
 	public String getAcctOpenedEvent(String srcevent) {
 		Gson gson = new Gson();
 		AccountOpenedEvnt srcEvnt = gson.fromJson(srcevent, AccountOpenedEvnt.class);
+		GenerateNotification genNotification = new GenerateNotification();
+		
+		genNotification.setDataAttributes(srcEvnt.getMap());
+		try {
+			genNotification.generateNotification();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			
+		}
 
-		System.out.println(srcEvnt.getEventCategory());
-        System.out.println(srcEvnt.getEventType());
-        System.out.println(srcEvnt.getAccountNumber());
-        System.out.println(srcEvnt.getTDate());
         
         return srcEvnt.toString(); 
 	}
