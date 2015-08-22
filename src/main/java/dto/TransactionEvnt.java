@@ -12,6 +12,15 @@ public class TransactionEvnt {
 	String TDate;
 	Float  TAmt;
 	Float  BalanceAmt;
+	String CustId;
+	
+	public String getCustId() {
+		return CustId;
+	}
+
+	public void setCustId(String custId) {
+		CustId = custId;
+	}
 	
 	public Float getTAmt() {
 		return TAmt;
@@ -75,6 +84,8 @@ public class TransactionEvnt {
 		attributes.put("TransactionDate", this.getTDate());
 		attributes.put("TransactionAmt",Float.toString(this.getTAmt()));
 		attributes.put("Balance",Float.toString(this.getBalanceAmt()));
+		attributes.put("customerId",getCustId());
+
 		return attributes;
 		
 	}

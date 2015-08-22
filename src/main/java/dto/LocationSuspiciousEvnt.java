@@ -15,6 +15,15 @@ public class LocationSuspiciousEvnt {
 	String LocationTwo;
 	String TDateTwo;
 	Float  TAmtTwo;
+	String CustId;
+	
+	public String getCustId() {
+		return CustId;
+	}
+
+	public void setCustId(String custId) {
+		CustId = custId;
+	}
 
 	public String getEventType() {
 		return EventType;
@@ -119,6 +128,7 @@ public class LocationSuspiciousEvnt {
 		attributes.put("LocationTwo", this.getLocationTwo());
 		attributes.put("DateofLocTwo", this.getTDateTwo());
 		attributes.put("AmountLocTwo",Float.toString(this.getTAmtTwo()));
+		attributes.put("customerId",getCustId());
 
 		return attributes;
 	}

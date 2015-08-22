@@ -11,6 +11,16 @@ public class AmtSuspiciousEvnt {
 	String TDate;	
 	Float  TAmt;
 	Float  ThresholdAmt;
+	String CustId;
+
+	
+	public String getCustId() {
+		return CustId;
+	}
+
+	public void setCustId(String custId) {
+		CustId = custId;
+	}
 
 	public String getTDate() {
 		return TDate;
@@ -95,7 +105,9 @@ public class AmtSuspiciousEvnt {
 		attributes.put("EventType", this.getEventType());
 		attributes.put("TransactionDate", this.getTDate());
 		attributes.put("TransactionAmt",Float.toString(this.getTAmt()));
-		attributes.put("Threshold",Float.toString(this.getThresholdAmt()));
+		attributes.put("AmtSuspiciousThreshold",Float.toString(this.getThresholdAmt()));
+		attributes.put("customerId",getCustId());
+
 		return attributes;
 		
 	}

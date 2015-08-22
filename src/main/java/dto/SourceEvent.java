@@ -1,11 +1,34 @@
 package dto;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SourceEvent {
+	String MessageId;
 	String EventType;
 	String EventCategory;
 	String AccountNumber;
 	String TDate;
 	Float  TAmt;
+	String CustId;
+	
+	
+	public String getMessageId() {
+		return MessageId;
+	}
+
+	public void setMessageId(String messageId) {
+		MessageId = messageId;
+	}
+
+	public String getCustId() {
+		return CustId;
+	}
+
+	public void setCustId(String custId) {
+		CustId = custId;
+	}
+
 	public String getEventType() {
 		return EventType;
 	}
@@ -52,5 +75,21 @@ public class SourceEvent {
 		builder.append(" ");
 		return builder.toString();
 	}
+
+	public Map<String,String> getMap()
+	{
+		Map<String,String> attributes = new HashMap<String, String>();
+		attributes.put("MessageId", this.getMessageId());
+		attributes.put("AccountNumber", this.getAccountNumber());
+		attributes.put("EventCategory", this.getEventCategory());
+		attributes.put("EventType", this.getEventType());
+		attributes.put("TransactionDate", this.getTDate());
+		attributes.put("TransactionAmt",Float.toString(this.getTAmt()));
+		attributes.put("customerId",getCustId());
+
+		return attributes;
+		
+	}
+
 
 }
