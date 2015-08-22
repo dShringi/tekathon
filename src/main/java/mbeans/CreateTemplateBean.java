@@ -33,16 +33,16 @@ public class CreateTemplateBean implements Serializable{
 	private String prefrence;
 	private String language;
 	
-	private boolean email;
-	private boolean web;
-	private boolean sms;
+//	private boolean email;
+//	private boolean web;
+//	private boolean sms;
 	
 	
 	private List<String> prefrences;
 	private List<String> prefrenceComponets;
-	private List<String> emailPref;
-	private List<String> smsPref;
-	private List<String> webPref;
+//	private List<String> emailPref;
+//	private List<String> smsPref;
+//	private List<String> webPref;
 	private List<String> languages;
 	
 	private SmsRepository smsRepository;
@@ -65,22 +65,7 @@ public class CreateTemplateBean implements Serializable{
 		this.prefrenceComponets = prefrenceComponets;
 	}
 	
-	public void changePref(){
-		if(getPrefrence().equals("sms")){
-			setSms(true);
-			setWeb(false);
-			setEmail(false);
-		}else if(getPrefrence().equals("web")){
-			setWeb(true);
-			setSms(false);
-			setEmail(false);
-		}else if(getPrefrence().equals("email")){
-			setEmail(true);
-			setSms(false);
-			setWeb(false);
-		}
-		
-	}
+	
 
 	@PostConstruct
 	public void init() {
@@ -94,15 +79,15 @@ public class CreateTemplateBean implements Serializable{
 		getPrefrenceComponets().add("AcntNo");
 		getPrefrenceComponets().add("Location");
 		
-		setSmsPref(new ArrayList<>());
-		getSmsPref().add("Last Name");
-		
-		setWebPref(new ArrayList<>());
-		getWebPref().add("First Name");
-		
-		setEmailPref(new ArrayList<>());
-		getEmailPref().add("AccountType");
-		
+//		setSmsPref(new ArrayList<>());
+//		getSmsPref().add("Last Name");
+//		
+//		setWebPref(new ArrayList<>());
+//		getWebPref().add("First Name");
+//		
+//		setEmailPref(new ArrayList<>());
+//		getEmailPref().add("AccountType");
+//		
 		setLanguages(new ArrayList<>());
 		getLanguages().add("English");
 		getLanguages().add("French");
@@ -199,52 +184,52 @@ public class CreateTemplateBean implements Serializable{
 			
 	}
 
-	public boolean isEmail() {
-		return email;
-	}
+//	public boolean isEmail() {
+//		return email;
+//	}
+//
+//	public void setEmail(boolean email) {
+//		this.email = email;
+//	}
+//
+//
+//	public boolean isWeb() {
+//		return web;
+//	}
+//
+//	public void setWeb(boolean web) {
+//		this.web = web;
+//	}
+//
+//	public boolean isSms() {
+//		return sms;
+//	}
+//
+//	public void setSms(boolean sms) {
+//		this.sms = sms;
+//	}
 
-	public void setEmail(boolean email) {
-		this.email = email;
-	}
-
-
-	public boolean isWeb() {
-		return web;
-	}
-
-	public void setWeb(boolean web) {
-		this.web = web;
-	}
-
-	public boolean isSms() {
-		return sms;
-	}
-
-	public void setSms(boolean sms) {
-		this.sms = sms;
-	}
-
-	public List<String> getEmailPref() {
-		return emailPref;
-	}
-
-	public void setEmailPref(List<String> emailPref) {
-		this.emailPref = emailPref;
-	}
-
-	public List<String> getSmsPref() {
-		return smsPref;
-	}
-
-	public void setSmsPref(List<String> smsPref) {
-		this.smsPref = smsPref;
-	}
-
-	public List<String> getWebPref() {
-		return webPref;
-	}
-
-	public void setWebPref(List<String> webPref) {
-		this.webPref = webPref;
-	}
+//	public List<String> getEmailPref() {
+//		return emailPref;
+//	}
+//
+//	public void setEmailPref(List<String> emailPref) {
+//		this.emailPref = emailPref;
+//	}
+//
+//	public List<String> getSmsPref() {
+//		return smsPref;
+//	}
+//
+//	public void setSmsPref(List<String> smsPref) {
+//		this.smsPref = smsPref;
+//	}
+//
+//	public List<String> getWebPref() {
+//		return webPref;
+//	}
+//
+//	public void setWebPref(List<String> webPref) {
+//		this.webPref = webPref;
+//	}
 }
