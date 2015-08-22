@@ -11,16 +11,23 @@ public class AccountOpenedEvnt {
 	String Location;
 	String TDate;
 	Float  BalanceAmt;
-	String CustId;
+	String customerId;
+	String teamId;
 	
-	public String getCustId() {
-		return CustId;
-	}
+	
 
-	public void setCustId(String custId) {
-		CustId = custId;
+	public String getCustomerId() {
+		return customerId;
 	}
-
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+	public String getTeamId() {
+		return teamId;
+	}
+	public void setTeamId(String teamId) {
+		this.teamId = teamId;
+	}
 	public String getEventType() {
 		return EventType;
 	}
@@ -75,7 +82,8 @@ public class AccountOpenedEvnt {
 		attributes.put("EventType", this.getEventType());
 		attributes.put("TransactionDate", this.getTDate());
 		attributes.put("Balance",Float.toString(this.getBalanceAmt()));
-		attributes.put("customerId",getCustId());
+		attributes.put("customerId",getCustomerId());
+		attributes.put("teamId",getTeamId());
 		return attributes;
 	}
 

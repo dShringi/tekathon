@@ -88,8 +88,6 @@ public class SpringSingletonResource {
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
-
-		result = getUserDetail();
 		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
 		List<Contact> contacts = customerDetail.getContacts();
 		for (Contact contact : contacts) {
@@ -102,7 +100,7 @@ public class SpringSingletonResource {
 	}
 
 	// Service to get Customer Details for notification.
-	private String getUserDetail() {
+	private String getUserDetail(String custid) {
 		String link = "http://104.131.44.187:8081/CxfRestService/rest/customerservices/getcustomerdetails";
 		Client client = ClientBuilder.newClient(new ClientConfig());
 		String userDetail = client.target(link).queryParam("customerId", "1")
@@ -110,6 +108,8 @@ public class SpringSingletonResource {
 		return userDetail;
 	}
 
+	
+	
 	
 	@POST
 	@Path("/accpref")

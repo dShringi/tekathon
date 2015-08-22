@@ -11,7 +11,6 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -27,8 +26,7 @@ import dto.Language;
 import dto.Preference;
 import dto.TemplateLink;
 
-@Component
-@Scope("prototype")
+@Component("generateNotification")
 public class GenerateNotification {
 	
 	@Autowired
@@ -39,7 +37,8 @@ public class GenerateNotification {
 	
 	private Map<String, Object> dataAttributes = new HashMap<String, Object>();
 	private Map<String, Object> custAttributes = new HashMap<String, Object>();
-	private AccountPref accntPref = null; 
+	private List<AccountPref> accntPrefList = null; 
+
 	
 	public String generateNotification() throws IOException {
 		
@@ -59,8 +58,13 @@ public class GenerateNotification {
 		}
 		
 		
-		EventType eventType = (EventType) dataAttributes.get("eventType");
-		accntPref = getAcctPref(""+context.get("accountNumber"));
+		EventType eventType = EventType.getEventType(""+dataAttributes.get("EventType"));
+	
+
+		this.accntPrefList= acntPrefRepo.findByAcctNo(context.get("AccountNumber")+"");
+		
+		AccountPref accntPref = accntPrefList.get(0);
+		
 		List<Preference> prefs = accntPref.getPrefs();
 		Language lang = accntPref.getLanguage();
 		boolean notify = accntPref.isNotify();
@@ -72,28 +76,23 @@ public class GenerateNotification {
 			
 			StringWriter stringWriter = new StringWriter();
 			t.merge(context, stringWriter);
-			return stringWriter.toString();
+			System.out.println(stringWriter.toString());
 		}
 
 		return null;
 	}
 	
-	private TemplateLink getTemplateLink(EventType eventType, Language language, Preference pref){
+	public TemplateLink getTemplateLink(EventType eventType, Language lang, Preference pref){
 		Query query = new Query();
-		query.addCriteria(Criteria.where("eventType").is(eventType.toString()));
-		query.addCriteria(Criteria.where("language").is(language.toString()));
-		query.addCriteria(Criteria.where("pref").is(pref.toString()));
-		List<TemplateLink> tempLink = template.find(query, TemplateLink.class);
-		return tempLink.get(0);
+		query.addCriteria(Criteria.where("eventType").is(eventType));
+		query.addCriteria(Criteria.where("language").is(lang));
+		query.addCriteria(Criteria.where("pref").is(pref));
+		return template.find(query, TemplateLink.class).get(0);
+		
 	}
-
 	
-	public AccountPref getAcctPref(String acctNumber) {
-		List<AccountPref> acctPref = acntPrefRepo.findByAcctNo(acctNumber);
-		return acctPref.get(0);
-	}
 
-	 
+
 	public Map<String, Object> getCustAttributes() {
 		return custAttributes;
 	}

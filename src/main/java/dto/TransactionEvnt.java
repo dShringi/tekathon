@@ -12,16 +12,22 @@ public class TransactionEvnt {
 	String TDate;
 	Float  TAmt;
 	Float  BalanceAmt;
-	String CustId;
+	String customerId;
+	String teamId;
 	
-	public String getCustId() {
-		return CustId;
-	}
-
-	public void setCustId(String custId) {
-		CustId = custId;
-	}
 	
+	public String getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+	public String getTeamId() {
+		return teamId;
+	}
+	public void setTeamId(String teamId) {
+		this.teamId = teamId;
+	}
 	public Float getTAmt() {
 		return TAmt;
 	}
@@ -84,13 +90,10 @@ public class TransactionEvnt {
 		attributes.put("TransactionDate", this.getTDate());
 		attributes.put("TransactionAmt",Float.toString(this.getTAmt()));
 		attributes.put("Balance",Float.toString(this.getBalanceAmt()));
-		attributes.put("customerId",getCustId());
-
+		attributes.put("customerId",getCustomerId());
+		attributes.put("teamId", getTeamId());
 		return attributes;
-		
 	}
-
-	
 	
 	public String toString()
 	{

@@ -48,11 +48,13 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import dao.AccPrefRepository;
 import dto.AccountOpenedEvnt;
 import dto.AccountPref;
 import dto.AmtSuspiciousEvnt;
@@ -72,6 +74,12 @@ import util.GenerateNotification;
 @Component("eventSource")
 public class EventSourceImpl implements EventSource {
 
+	@Autowired
+	public GenerateNotification generateNotification;
+	
+	@Autowired
+	public AccPrefRepository acntPrefRepo;
+	
 	@Override
 	public String getevent(String srcevent) {
 		
@@ -110,17 +118,24 @@ public class EventSourceImpl implements EventSource {
 	@Override
 	public String getFundedEvent(String srcevent) {
 		Gson gson = new Gson();
+		
+		//Load Event payload
 		TransactionEvnt srcEvnt = gson.fromJson(srcevent, TransactionEvnt.class);
-/*
-		GenerateNotification genNotification = new GenerateNotification();
-		genNotification.setDataAttributes(srcEvnt.getMap());
+		// get user details
+		String result = getUserDetail(srcEvnt.getCustomerId());
+		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
+		
+		// generate notification component to populate evnt and customer details
+		generateNotification.setDataAttributes(srcEvnt.getMap());
+		generateNotification.setCustAttributes(customerDetail.getMap());
 		try {
-			genNotification.generateNotification();
+			generateNotification.generateNotification();
 		} catch (IOException e) {
-			System.out.println("Error generating  Account funded notification");
+			System.out.println("exception rais");
+			e.printStackTrace();
 		}
+		
 		System.out.println("Account funded notification done");
-*/
         return srcEvnt.toString(); 
 	}
 
@@ -181,7 +196,6 @@ public class EventSourceImpl implements EventSource {
 
 	@Override
 	public String getAmtSuspiciousEvent(String srcevent) {
-		// TODO Auto-generated method stub
 		Gson gson = new Gson();
 		AmtSuspiciousEvnt srcEvnt = gson.fromJson(srcevent, AmtSuspiciousEvnt.class);
 

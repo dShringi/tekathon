@@ -14,6 +14,7 @@
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 	<context:component-scan base-package="com.mastek" />
+	<context:component-scan base-package="util" />
 	<tx:annotation-driven />
 
 	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate" />
