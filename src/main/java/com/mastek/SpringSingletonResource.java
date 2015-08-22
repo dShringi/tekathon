@@ -58,6 +58,9 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
+import dao.AccPrefRepository;
+import dao.NPLRepository;
+import dto.AccountPref;
 import dto.NotificationPayload;
 import util.GenerateNotification;
 
@@ -69,6 +72,12 @@ public class SpringSingletonResource {
 
     @Autowired
     private GreetingService greetingService;
+
+    @Autowired
+	private NPLRepository nplRepository;
+    
+    @Autowired
+    private AccPrefRepository acntPrefRepo;
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -84,16 +93,26 @@ public class SpringSingletonResource {
     public Response postCheck(String data){
     	Gson gson = new Gson();
     	NotificationPayload payload = gson.fromJson(data, NotificationPayload.class);
+    	nplRepository.save(payload);
     	String result = "Data post : "+ payload.getName();
     	
     	try {
-			result = GenerateNotification.generateNotification();
+			result = new GenerateNotification().generateNotification();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    	
     	return Response.status(201).entity(result).build(); 
     }
     
-    
+    @POST
+    @Path("/accpref")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addAccPref(String data){
+    	Gson gson = new Gson();
+    	AccountPref accountPref=gson.fromJson(data, AccountPref.class);
+    	String result = "Data post : "+ accountPref;
+    	acntPrefRepo.save(accountPref);
+    	return Response.status(201).entity(result).build(); 
+    }
+
 }
