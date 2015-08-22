@@ -1,5 +1,8 @@
 package dto;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LocationSuspiciousEvnt {
 	String MessageId;
 	String EventType;
@@ -99,6 +102,25 @@ public class LocationSuspiciousEvnt {
 		builder.append("Transaction two Amt : "+getTAmtTwo());
 		builder.append(" ");
 		return builder.toString();
+	}
+
+	public Map<String,String> getMap()
+	{
+		Map<String,String> attributes = new HashMap<String, String>();
+		attributes.put("MessageId", this.getMessageId());
+		attributes.put("AccountNumber", this.getAccountNumber());
+		attributes.put("EventCategory", this.getEventCategory());
+		attributes.put("EventType", this.getEventType());
+
+		attributes.put("LocationOne", this.getLocationOne());
+		attributes.put("DateofLocOne", this.getTDateOne());
+		attributes.put("AmountLocOne",Float.toString(this.getTAmtOne()));
+
+		attributes.put("LocationTwo", this.getLocationTwo());
+		attributes.put("DateofLocTwo", this.getTDateTwo());
+		attributes.put("AmountLocTwo",Float.toString(this.getTAmtTwo()));
+
+		return attributes;
 	}
 
 }

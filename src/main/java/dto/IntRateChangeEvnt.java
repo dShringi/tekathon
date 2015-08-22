@@ -1,5 +1,8 @@
 package dto;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class IntRateChangeEvnt {
 	String MessageId;
 	String EventType;
@@ -65,6 +68,20 @@ public class IntRateChangeEvnt {
 		NewInterestRate = newInterestRate;
 	}
 
+	public Map<String,String> getMap()
+	{
+		Map<String,String> attributes = new HashMap<String, String>();
+		attributes.put("MessageId", this.getMessageId());
+		attributes.put("EventCategory", this.getEventCategory());
+		attributes.put("EventType", this.getEventType());
+		attributes.put("TransactionDate", this.getTDate());
+		attributes.put("EffectiveDt", this.getEffectiveDate());
+		attributes.put("OldIntRate",Float.toString(this.getOldInterestRate()));
+		attributes.put("OldIntRate",Float.toString(this.getNewInterestRate()));
+		return attributes;
+	}
+
+	
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();

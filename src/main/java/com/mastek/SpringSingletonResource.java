@@ -85,13 +85,6 @@ public class SpringSingletonResource {
     	Gson gson = new Gson();
     	NotificationPayload payload = gson.fromJson(data, NotificationPayload.class);
     	String result = "Data post : "+ payload.getName();
-    	
-    	try {
-			result = GenerateNotification.generateNotification();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    	
     	return Response.status(201).entity(result).build(); 
     }
     

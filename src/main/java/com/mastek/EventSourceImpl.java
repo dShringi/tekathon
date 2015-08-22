@@ -87,18 +87,16 @@ public class EventSourceImpl implements EventSource {
 	public String getAcctOpenedEvent(String srcevent) {
 		Gson gson = new Gson();
 		AccountOpenedEvnt srcEvnt = gson.fromJson(srcevent, AccountOpenedEvnt.class);
+
 		GenerateNotification genNotification = new GenerateNotification();
-		
 		genNotification.setDataAttributes(srcEvnt.getMap());
 		try {
 			genNotification.generateNotification();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			
+			System.out.println("Error generate Acct opened notification");
 		}
-
-        
-        return srcEvnt.toString(); 
+		System.out.println("Account Opened notification done");
+		return srcEvnt.toString(); 
 	}
 
 	@Override
@@ -106,11 +104,14 @@ public class EventSourceImpl implements EventSource {
 		Gson gson = new Gson();
 		TransactionEvnt srcEvnt = gson.fromJson(srcevent, TransactionEvnt.class);
 
-		System.out.println(srcEvnt.getEventCategory());
-        System.out.println(srcEvnt.getEventType());
-        System.out.println(srcEvnt.getAccountNumber());
-        System.out.println(srcEvnt.getTDate());
-        
+		GenerateNotification genNotification = new GenerateNotification();
+		genNotification.setDataAttributes(srcEvnt.getMap());
+		try {
+			genNotification.generateNotification();
+		} catch (IOException e) {
+			System.out.println("Error generating  Account funded notification");
+		}
+		System.out.println("Account funded notification done");
         return srcEvnt.toString(); 
 	}
 
@@ -119,11 +120,14 @@ public class EventSourceImpl implements EventSource {
 		Gson gson = new Gson();
 		TransactionEvnt srcEvnt = gson.fromJson(srcevent, TransactionEvnt.class);
 
-		System.out.println(srcEvnt.getEventCategory());
-        System.out.println(srcEvnt.getEventType());
-        System.out.println(srcEvnt.getAccountNumber());
-        System.out.println(srcEvnt.getTDate());
-        
+		GenerateNotification genNotification = new GenerateNotification();
+		genNotification.setDataAttributes(srcEvnt.getMap());
+		try {
+			genNotification.generateNotification();
+		} catch (IOException e) {
+			System.out.println("Error generating  Account funded notification");
+		}
+		System.out.println("Account withdrawn notification done");
         return srcEvnt.toString(); 
 	}
 
@@ -132,10 +136,14 @@ public class EventSourceImpl implements EventSource {
 	public String getIntRateChangeEvent(String srcevent) {
 		Gson gson = new Gson();
 		IntRateChangeEvnt srcEvnt = gson.fromJson(srcevent, IntRateChangeEvnt.class);
-
-		System.out.println(srcEvnt.getEventCategory());
-        System.out.println(srcEvnt.getEventType());
-        System.out.println(srcEvnt.getTDate());       
+		GenerateNotification genNotification = new GenerateNotification();
+		genNotification.setDataAttributes(srcEvnt.getMap());
+		try {
+			genNotification.generateNotification();
+		} catch (IOException e) {
+			System.out.println("Error generating  Account funded notification");
+		}
+		System.out.println("Interest Rate change notification done");
         return srcEvnt.toString(); 
 	}
 
@@ -144,9 +152,14 @@ public class EventSourceImpl implements EventSource {
 		// TODO Auto-generated method stub
 		Gson gson = new Gson();
 		LocationSuspiciousEvnt srcEvnt = gson.fromJson(srcevent, LocationSuspiciousEvnt.class);
-
-		System.out.println(srcEvnt.getEventCategory());
-        System.out.println(srcEvnt.getEventType());
+		GenerateNotification genNotification = new GenerateNotification();
+		genNotification.setDataAttributes(srcEvnt.getMap());
+		try {
+			genNotification.generateNotification();
+		} catch (IOException e) {
+			System.out.println("Error generating Location Suspicious notification");
+		}
+		System.out.println("Location Suspicious notification done");
         return srcEvnt.toString(); 
 	}
 
@@ -155,9 +168,14 @@ public class EventSourceImpl implements EventSource {
 		// TODO Auto-generated method stub
 		Gson gson = new Gson();
 		AmtSuspiciousEvnt srcEvnt = gson.fromJson(srcevent, AmtSuspiciousEvnt.class);
-
-		System.out.println(srcEvnt.getEventCategory());
-        System.out.println(srcEvnt.getEventType());
+		GenerateNotification genNotification = new GenerateNotification();
+		genNotification.setDataAttributes(srcEvnt.getMap());
+		try {
+			genNotification.generateNotification();
+		} catch (IOException e) {
+			System.out.println("Error generating Amount Suspicious notification");
+		}
+		System.out.println("Amount Suspicious notification done");
         return srcEvnt.toString(); 
 	}
 }
