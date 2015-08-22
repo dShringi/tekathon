@@ -1,5 +1,8 @@
 package dto;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TransactionEvnt {
 	String MessageId;
 	String EventType;
@@ -9,7 +12,22 @@ public class TransactionEvnt {
 	String TDate;
 	Float  TAmt;
 	Float  BalanceAmt;
+	String customerId;
+	String teamId;
 	
+	
+	public String getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+	public String getTeamId() {
+		return teamId;
+	}
+	public void setTeamId(String teamId) {
+		this.teamId = teamId;
+	}
 	public Float getTAmt() {
 		return TAmt;
 	}
@@ -59,6 +77,22 @@ public class TransactionEvnt {
 	
 	public void setLocation(String location) {
 		Location = location;
+	}
+
+	
+	public Map<String,Object> getMap()
+	{
+		Map<String,Object> attributes = new HashMap<String, Object>();
+		attributes.put("MessageId", this.getMessageId());
+		attributes.put("AccountNumber", this.getAccountNumber());
+		attributes.put("EventCategory", this.getEventCategory());
+		attributes.put("EventType", this.getEventType());
+		attributes.put("TransactionDate", this.getTDate());
+		attributes.put("TransactionAmt",Float.toString(this.getTAmt()));
+		attributes.put("Balance",Float.toString(this.getBalanceAmt()));
+		attributes.put("customerId",getCustomerId());
+		attributes.put("teamId", getTeamId());
+		return attributes;
 	}
 	
 	public String toString()

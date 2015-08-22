@@ -11,7 +11,23 @@ public class AccountOpenedEvnt {
 	String Location;
 	String TDate;
 	Float  BalanceAmt;
+	String customerId;
+	String teamId;
 	
+	
+
+	public String getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+	public String getTeamId() {
+		return teamId;
+	}
+	public void setTeamId(String teamId) {
+		this.teamId = teamId;
+	}
 	public String getEventType() {
 		return EventType;
 	}
@@ -57,14 +73,17 @@ public class AccountOpenedEvnt {
 	}
 	
 	
-	public Map<String,String> getMap()
+	public Map<String,Object> getMap()
 	{
-		Map<String,String> attributes = new HashMap<String, String>();
+		Map<String,Object> attributes = new HashMap<String, Object>();
+		attributes.put("MessageId", this.getMessageId());
 		attributes.put("AccountNumber", this.getAccountNumber());
 		attributes.put("EventCategory", this.getEventCategory());
 		attributes.put("EventType", this.getEventType());
 		attributes.put("TransactionDate", this.getTDate());
-		attributes.put("TransactionAmt",Float.toString(this.getBalanceAmt()));
+		attributes.put("Balance",Float.toString(this.getBalanceAmt()));
+		attributes.put("customerId",getCustomerId());
+		attributes.put("teamId",getTeamId());
 		return attributes;
 	}
 

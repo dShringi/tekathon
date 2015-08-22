@@ -41,21 +41,33 @@ package com.mastek;
 
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.MediaType;
+
+import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import util.GenerateNotification;
-
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
+import dao.AccPrefRepository;
+import dto.Account;
+import dto.AccountDetail;
 import dto.AccountOpenedEvnt;
-import dto.LocationSuspiciousEvnt;
-import dto.IntRateChangeEvnt;
+import dto.AccountPref;
 import dto.AmtSuspiciousEvnt;
+import dto.IntRateChangeEvnt;
+import dto.LocationSuspiciousEvnt;
 import dto.SourceEvent;
 import dto.TransactionEvnt;
+import util.Contact;
+import util.CustomerDetail;
+import util.GenerateNotification;
 
 /**
  * serviceimplementation to get source events
@@ -65,6 +77,12 @@ import dto.TransactionEvnt;
 @Component("eventSource")
 public class EventSourceImpl implements EventSource {
 
+	@Autowired
+	public GenerateNotification generateNotification;
+	
+	@Autowired
+	public AccPrefRepository acntPrefRepo;
+	
 	@Override
 	public String getevent(String srcevent) {
 		
@@ -86,31 +104,62 @@ public class EventSourceImpl implements EventSource {
 	@Override
 	public String getAcctOpenedEvent(String srcevent) {
 		Gson gson = new Gson();
+		//Load Event payload
 		AccountOpenedEvnt srcEvnt = gson.fromJson(srcevent, AccountOpenedEvnt.class);
-		GenerateNotification genNotification = new GenerateNotification();
-		
-		genNotification.setDataAttributes(srcEvnt.getMap());
-		try {
-			genNotification.generateNotification();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			
-		}
 
-        
-        return srcEvnt.toString(); 
+		// get user details
+		String result = getUserDetail(srcEvnt.getCustomerId());
+		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
+		
+		String acctDetail = getOtherDetails(srcEvnt.getCustomerId());
+		AccountDetail accountDetail = gson.fromJson(acctDetail, AccountDetail.class);
+		
+		// generate notification component to populate evnt and customer details
+		generateNotification.setDataAttributes(srcEvnt.getMap());
+		generateNotification.setCustAttributes(customerDetail.getMap());
+		
+		List<Account> accounts = accountDetail.getAccounts();
+		for(Account account: accounts){
+			if(account.getAccountCode().equals(srcEvnt.getAccountNumber())){
+				Map<String, Object> dataAttributes = generateNotification.getDataAttributes();
+				dataAttributes.put("productType", account.getProductType());
+				dataAttributes.put("accountType", account.getAccountType());
+				generateNotification.setDataAttributes(dataAttributes);
+			}
+		}
+		
+		try {
+			generateNotification.generateNotification();
+		} catch (IOException e) {
+			System.out.println("exception rais");
+			e.printStackTrace();
+		}
+		
+		System.out.println("Account Opened notification done");
+		return srcEvnt.toString(); 
 	}
 
 	@Override
 	public String getFundedEvent(String srcevent) {
 		Gson gson = new Gson();
+		
+		//Load Event payload
 		TransactionEvnt srcEvnt = gson.fromJson(srcevent, TransactionEvnt.class);
-
-		System.out.println(srcEvnt.getEventCategory());
-        System.out.println(srcEvnt.getEventType());
-        System.out.println(srcEvnt.getAccountNumber());
-        System.out.println(srcEvnt.getTDate());
-        
+		// get user details
+		String result = getUserDetail(srcEvnt.getCustomerId());
+		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
+		
+		// generate notification component to populate evnt and customer details
+		generateNotification.setDataAttributes(srcEvnt.getMap());
+		generateNotification.setCustAttributes(customerDetail.getMap());
+		try {
+			generateNotification.generateNotification();
+		} catch (IOException e) {
+			System.out.println("exception rais");
+			e.printStackTrace();
+		}
+		
+		System.out.println("Account funded notification done");
         return srcEvnt.toString(); 
 	}
 
@@ -118,13 +167,20 @@ public class EventSourceImpl implements EventSource {
 	public String getWithdrawnEvent(String srcevent) {
 		Gson gson = new Gson();
 		TransactionEvnt srcEvnt = gson.fromJson(srcevent, TransactionEvnt.class);
-
-		System.out.println(srcEvnt.getEventCategory());
-        System.out.println(srcEvnt.getEventType());
-        System.out.println(srcEvnt.getAccountNumber());
-        System.out.println(srcEvnt.getTDate());
-        
-        return srcEvnt.toString(); 
+		// get user details
+		String result = getUserDetail(srcEvnt.getCustomerId());
+		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
+		
+		// generate notification component to populate evnt and customer details
+		generateNotification.setDataAttributes(srcEvnt.getMap());
+		generateNotification.setCustAttributes(customerDetail.getMap());
+		try {
+			generateNotification.generateNotification();
+		} catch (IOException e) {
+			System.out.println("exception rais");
+			e.printStackTrace();
+		}
+	        return srcEvnt.toString(); 
 	}
 
 
@@ -132,10 +188,20 @@ public class EventSourceImpl implements EventSource {
 	public String getIntRateChangeEvent(String srcevent) {
 		Gson gson = new Gson();
 		IntRateChangeEvnt srcEvnt = gson.fromJson(srcevent, IntRateChangeEvnt.class);
-
-		System.out.println(srcEvnt.getEventCategory());
-        System.out.println(srcEvnt.getEventType());
-        System.out.println(srcEvnt.getTDate());       
+		// get user details
+		String result = getUserDetail(srcEvnt.getCustomerId());
+		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
+		
+		// generate notification component to populate evnt and customer details
+		generateNotification.setDataAttributes(srcEvnt.getMap());
+		generateNotification.setCustAttributes(customerDetail.getMap());
+		try {
+			generateNotification.generateNotification();
+		} catch (IOException e) {
+			System.out.println("exception rais");
+			e.printStackTrace();
+		}
+			System.out.println("Interest Rate change notification done");
         return srcEvnt.toString(); 
 	}
 
@@ -144,20 +210,64 @@ public class EventSourceImpl implements EventSource {
 		// TODO Auto-generated method stub
 		Gson gson = new Gson();
 		LocationSuspiciousEvnt srcEvnt = gson.fromJson(srcevent, LocationSuspiciousEvnt.class);
+		
+		// get user details
+		String result = getUserDetail(srcEvnt.getCustomerId());
+		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
+		
+		// generate notification component to populate evnt and customer details
+		generateNotification.setDataAttributes(srcEvnt.getMap());
+		generateNotification.setCustAttributes(customerDetail.getMap());
+		try {
+			generateNotification.generateNotification();
+		} catch (IOException e) {
+			System.out.println("exception rais");
+			e.printStackTrace();
+		}
+			System.out.println("Location Suspicious notification done");
 
-		System.out.println(srcEvnt.getEventCategory());
-        System.out.println(srcEvnt.getEventType());
         return srcEvnt.toString(); 
 	}
 
 	@Override
 	public String getAmtSuspiciousEvent(String srcevent) {
-		// TODO Auto-generated method stub
 		Gson gson = new Gson();
 		AmtSuspiciousEvnt srcEvnt = gson.fromJson(srcevent, AmtSuspiciousEvnt.class);
 
-		System.out.println(srcEvnt.getEventCategory());
-        System.out.println(srcEvnt.getEventType());
+		// get user details
+		String result = getUserDetail(srcEvnt.getCustomerId());
+		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
+		
+		// generate notification component to populate evnt and customer details
+		generateNotification.setDataAttributes(srcEvnt.getMap());
+		generateNotification.setCustAttributes(customerDetail.getMap());
+		try {
+			generateNotification.generateNotification();
+		} catch (IOException e) {
+			System.out.println("exception rais");
+			e.printStackTrace();
+		}
+			System.out.println("Amount Suspicious notification done");
         return srcEvnt.toString(); 
 	}
+
+	// Service to get Customer Details for notification.
+	private String getUserDetail(String custid) {
+		String link = "http://104.131.44.187:8081/CxfRestService/rest/customerservices/getcustomerdetails";
+		Client client = ClientBuilder.newClient(new ClientConfig());
+		String userDetail = client.target(link).queryParam("customerId", custid)
+				.request(MediaType.APPLICATION_JSON).get(String.class);
+		return userDetail;
+	}
+
+	// Service to get Customer Details for notification.
+		private String getOtherDetails(String custid) {
+			String link = "http://104.131.44.187:8081/CxfRestService/rest/customerservices/getcustomeraccountdetails";
+			Client client = ClientBuilder.newClient(new ClientConfig());
+			String otherDetail = client.target(link).queryParam("customerId", custid)
+					.request(MediaType.APPLICATION_JSON).get(String.class);
+			return otherDetail;
+		}
+	
+	
 }

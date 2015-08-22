@@ -1,5 +1,8 @@
 package dto;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LocationSuspiciousEvnt {
 	String MessageId;
 	String EventType;
@@ -12,7 +15,22 @@ public class LocationSuspiciousEvnt {
 	String LocationTwo;
 	String TDateTwo;
 	Float  TAmtTwo;
-
+	String customerId;
+	String teamId;
+	
+	
+	public String getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+	public String getTeamId() {
+		return teamId;
+	}
+	public void setTeamId(String teamId) {
+		this.teamId = teamId;
+	}
 	public String getEventType() {
 		return EventType;
 	}
@@ -99,6 +117,26 @@ public class LocationSuspiciousEvnt {
 		builder.append("Transaction two Amt : "+getTAmtTwo());
 		builder.append(" ");
 		return builder.toString();
+	}
+
+	public Map<String,Object> getMap()
+	{
+		Map<String,Object> attributes = new HashMap<String, Object>();
+		attributes.put("MessageId", this.getMessageId());
+		attributes.put("AccountNumber", this.getAccountNumber());
+		attributes.put("EventCategory", this.getEventCategory());
+		attributes.put("EventType", this.getEventType());
+
+		attributes.put("LocationOne", this.getLocationOne());
+		attributes.put("DateofLocOne", this.getTDateOne());
+		attributes.put("AmountLocOne",Float.toString(this.getTAmtOne()));
+
+		attributes.put("LocationTwo", this.getLocationTwo());
+		attributes.put("DateofLocTwo", this.getTDateTwo());
+		attributes.put("AmountLocTwo",Float.toString(this.getTAmtTwo()));
+		attributes.put("customerId",getCustomerId());
+
+		return attributes;
 	}
 
 }

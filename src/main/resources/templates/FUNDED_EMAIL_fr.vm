@@ -1,0 +1,10 @@
+Cher $fname $lname,
+
+Nous sommes heureux de vous informer qu'un montant de $TransactionAmt a été déposé dans votre compte nombre $AccountNumber
+sur $TransactionDate et le solde actuel est $Balance
+
+Merci pour les services bancaires avec nous.
+
+Cordialement
+John Doe
+Gestionnaire de relation
