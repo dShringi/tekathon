@@ -1,0 +1,39 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:form >
+	 <p:layoutUnit position="west" resizable="true" size="100" minSize="40" maxSize="200">
+        <h3>Prefrences</h3>
+        <h:selectOneMenu id="pref"  required="true" value="#{createTemplateBean.prefrence}"	label="Text 3" onchange="createTemplateBean.changePreference">
+				<f:selectItem itemLabel="Select One" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems value="#{createTemplateBean.prefrences}" />
+		</h:selectOneMenu>
+		<h3>EventComponents</h3>
+		
+		<h:outputLabel value="You can use below components to create template."></h:outputLabel>
+		<p:selectManyCheckbox id="grid"	value="#{createTemplateBean.prefrenceComponets}" layout="grid" columns="3">
+			<f:selectItems value="#{createTemplateBean.prefrenceComponets}"	var="componet" />
+		</p:selectManyCheckbox>
+    </p:layoutUnit>
+ 
+    <p:layoutUnit position="center">
+        <h3>Template</h3>
+		<p:inputTextarea id="textArea" rows="6" cols="50" value="#{createTemplateBean.message}"/>
+    </p:layoutUnit>
+    
+    <p:layoutUnit position="east" resizable="true" size="100" minSize="40" maxSize="200">
+        <h3>Language</h3>
+		<h:selectOneMenu id="language" value="language"  required="true"	label="Text 3">
+				<f:selectItem itemLabel="Select One" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems value="#{createTemplateBean.languages}" />
+		</h:selectOneMenu>
+    </p:layoutUnit>
+    
+    <h:commandButton value="submit"  action="#{createTemplateBean.submit}"/>
+</h:form>
+</html>

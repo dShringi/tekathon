@@ -5,6 +5,10 @@
 <h:head></h:head>
 
 <h:body>
-	<h:outputLabel value="Welcome #{successBean.name}"></h:outputLabel>
+	<h:form id="loginForm">
+		<h:outputLabel value="Welcome #{successBean.name}"></h:outputLabel>
+		 <h:commandButton value="createTemplate"  action="#{createTemplateBean.createTemplate}"/>
+	</h:form>
 </h:body>
 </html>
+ 

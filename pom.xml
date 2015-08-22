@@ -119,5 +119,12 @@
 			<artifactId>spring-data-mongodb</artifactId>
 			<version>1.7.2.RELEASE</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>4.0</version>
+		</dependency>
+
 	</dependencies>
 </project>

@@ -11,5 +11,16 @@
 			<redirect></redirect>
 		</navigation-case>
 	</navigation-rule>
+	
+	<navigation-rule>
+   <from-view-id>success.xhtml</from-view-id>
+   <navigation-case>
+      <from-action>#{createTemplateBean.createTemplate}</from-action>
+      <from-outcome>createTemplate</from-outcome>
+      <to-view-id>/createTemplate.xhtml</to-view-id>
+      <redirect></redirect>
+   </navigation-case>
+</navigation-rule>
+	
 	<application />
 </faces-config>

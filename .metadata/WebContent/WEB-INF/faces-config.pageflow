@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf14402168470541" configfile="/tekathon/WebContent/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="*" x="122" y="178" id="pf14402174653952" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf14402174653963" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="success.xhtml" x="338" y="178" id="pf14402174653964" referenceLink="//@navigationRule.0/@navigationCase.1/@toViewId|" inlinks="pf14402174653963" path="/success.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="success.xhtml" id="pf144021897000811" referenceLink="//@navigationRule.1/@fromViewId|" outlinks="pf144021897000812" path="success.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="createTemplate.xhtml" id="pf144021897000813" referenceLink="//@navigationRule.1/@navigationCase.0/@toViewId|" inlinks="pf144021897000812" path="/createTemplate.xhtml"/>
+  <links id="pf14402174653963" target="pf14402174653964" source="pf14402174653952" outcome="login" redirect="true"/>
+  <links id="pf144021897000812" target="pf144021897000813" source="pf144021897000811" outcome="createTemplate" redirect="true" fromaction="#{createTemplateBean.createTemplate}"/>
+</pageflow:Pageflow>
