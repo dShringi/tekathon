@@ -9,9 +9,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.glassfish.jersey.client.ClientConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -20,6 +26,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
+
+import com.google.gson.Gson;
 
 import dao.AccPrefRepository;
 import dao.NotifLogRepository;
@@ -120,10 +128,22 @@ public class GenerateNotification {
 			} else {
 				notifLog.setCommunicationId("INAPP");
 			}
+			
+			invokeDispatcher(notifLog);
 			notifLogRepo.save(notifLog);
 		}
 
 	}
+	
+	//Service to invoke dispatcher
+	private void invokeDispatcher(NotificationLog log){
+		String link = "http://104.131.44.187:8081/CxfRestService/rest/customerservices/getcustomeraccountdetails";
+		Gson gson = new Gson();
+		String data = gson.toJson(log);
+		Client client = ClientBuilder.newClient(new ClientConfig());
+		client.target(link).request(MediaType.APPLICATION_JSON).post(Entity.json(data));
+	}
+
 	
 	public TemplateLink getTemplateLink(EventType eventType, Language lang, Preference pref){
 		Query query = new Query();
