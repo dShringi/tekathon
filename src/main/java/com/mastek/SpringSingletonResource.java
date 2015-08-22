@@ -40,6 +40,8 @@
 package com.mastek;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.Consumes;
@@ -48,17 +50,22 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.glassfish.jersey.client.ClientConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
 import dto.NotificationPayload;
+import util.Contact;
+import util.CustomerDetail;
 import util.GenerateNotification;
 
 @Path("spring-singleton-hello")
@@ -91,8 +98,23 @@ public class SpringSingletonResource {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    	
+    	result = getUserDetail();
+    	CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
+    	List<Contact> contacts = customerDetail.getContacts();
+    	for(Contact contact: contacts){
+    		if(contact.getContactType().equalsIgnoreCase("email")){
+    			result = contact.getContact();
+    		}
+    	}
     	return Response.status(201).entity(result).build(); 
+    }
+    
+    private String getUserDetail(){
+    	String link = "http://192.168.15.45:8080/CxfRestService/rest/customerservices/getcustomerdetails";
+    	Client client = ClientBuilder.newClient(new ClientConfig());
+    	String userDetail = client.target(link).queryParam("customerId", "1")
+    			.request(MediaType.APPLICATION_JSON).get(String.class);
+    	return userDetail;
     }
     
     
