@@ -165,7 +165,7 @@ public class CreateTemplateBean implements Serializable{
 			//emailRepository.save(new Email(getPrefrence(),getLanguage()));
 			try {
 				URL url = resource.getURL();
-				String fileName="\\web.txt";
+				String fileName="\\email.txt";
 				PrintWriter writer = getWriter(url,fileName);
 				writer.println("Hi,");
 				writer.println(getMessage());
