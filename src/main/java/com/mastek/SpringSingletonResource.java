@@ -61,8 +61,9 @@ public class SpringSingletonResource {
 		return Response.status(201).entity(result).build();
 	}
 
+	// Service to get Customer Details for notification.
 	private String getUserDetail() {
-		String link = "http://192.168.15.45:8080/CxfRestService/rest/customerservices/getcustomerdetails";
+		String link = "http://104.131.44.187:8081/CxfRestService/rest/customerservices/getcustomerdetails";
 		Client client = ClientBuilder.newClient(new ClientConfig());
 		String userDetail = client.target(link).queryParam("customerId", "1")
 				.request(MediaType.APPLICATION_JSON).get(String.class);
