@@ -2,15 +2,22 @@ package util;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.glassfish.jersey.client.ClientConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -19,6 +26,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
+
+import com.google.gson.Gson;
 
 import dao.AccPrefRepository;
 import dao.NotifLogRepository;
@@ -63,16 +72,38 @@ public class GenerateNotification {
 			context.put(entry.getKey(), entry.getValue());
 		}
 		
-		
+		List<Contact> contacts = (List<Contact>)context.get("contacts");
 		EventType eventType = EventType.getEventType(""+dataAttributes.get("EventType"));
 	
 
 		this.accntPrefList= acntPrefRepo.findByAcctNo(context.get("AccountNumber")+"");
-		AccountPref accntPref = accntPrefList.get(0);
-		
-		List<Preference> prefs = accntPref.getPrefs();
-		Language lang = accntPref.getLanguage();
-		boolean notify = accntPref.isNotify();
+		List<Preference> prefs = null;
+		Language lang;
+		AccountPref accntPref =null;
+		if (accntPrefList.isEmpty())
+		{
+			prefs=new ArrayList<Preference>();
+			prefs.add(Preference.EMAIL);
+			lang =  Language.ENGLISH;
+			accntPref = new AccountPref();
+			accntPref.setAcctNo(context.get("AccountNumber")+"");
+			accntPref.setLanguage(lang);
+			accntPref.setNotify(true);
+			accntPref.setPrefs(prefs);
+			for(Contact contact: contacts){
+				if(contact.getContactType().equalsIgnoreCase("Mobile")){
+					accntPref.setSms(contact.getContact());
+				} else if(contact.getContactType().equalsIgnoreCase("Email")){
+					accntPref.setEmail(contact.getContact());
+				}
+			}
+		}
+		else{
+			accntPref = accntPrefList.get(0);
+			prefs = accntPref.getPrefs();
+			lang = accntPref.getLanguage();
+			boolean notify = accntPref.isNotify();
+		}
 		
 		
 		for(Preference pref: prefs) {
@@ -89,6 +120,7 @@ public class GenerateNotification {
 			notifLog.setDate(new Date()+"");
 			notifLog.setPref(pref);
 			notifLog.setNotification(notificaiton);
+			
 			if(pref.equals(Preference.SMS)){
 				notifLog.setCommunicationId(accntPref.getSms());
 			} else if(pref.equals(Preference.EMAIL)){
@@ -96,10 +128,22 @@ public class GenerateNotification {
 			} else {
 				notifLog.setCommunicationId("INAPP");
 			}
+			
+			invokeDispatcher(notifLog);
 			notifLogRepo.save(notifLog);
 		}
 
 	}
+	
+	//Service to invoke dispatcher
+	private void invokeDispatcher(NotificationLog log){
+		String link = "http://192.168.15.11:8282/dispatchMessage";
+		Gson gson = new Gson();
+		String data = gson.toJson(log);
+		Client client = ClientBuilder.newClient(new ClientConfig());
+		client.target(link).request(MediaType.APPLICATION_JSON).post(Entity.json(data));
+	}
+
 	
 	public TemplateLink getTemplateLink(EventType eventType, Language lang, Preference pref){
 		Query query = new Query();
