@@ -11,7 +11,16 @@ public class AccountOpenedEvnt {
 	String Location;
 	String TDate;
 	Float  BalanceAmt;
+	String CustId;
 	
+	public String getCustId() {
+		return CustId;
+	}
+
+	public void setCustId(String custId) {
+		CustId = custId;
+	}
+
 	public String getEventType() {
 		return EventType;
 	}
@@ -60,11 +69,13 @@ public class AccountOpenedEvnt {
 	public Map<String,String> getMap()
 	{
 		Map<String,String> attributes = new HashMap<String, String>();
+		attributes.put("MessageId", this.getMessageId());
 		attributes.put("AccountNumber", this.getAccountNumber());
 		attributes.put("EventCategory", this.getEventCategory());
 		attributes.put("EventType", this.getEventType());
 		attributes.put("TransactionDate", this.getTDate());
-		attributes.put("TransactionAmt",Float.toString(this.getBalanceAmt()));
+		attributes.put("Balance",Float.toString(this.getBalanceAmt()));
+		attributes.put("customerId",getCustId());
 		return attributes;
 	}
 
