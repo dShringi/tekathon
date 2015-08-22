@@ -46,7 +46,7 @@ public class GenerateNotification {
 	private List<AccountPref> accntPrefList = null; 
 
 	
-	public String generateNotification() throws IOException {
+	public void generateNotification() throws IOException {
 		
 		Resource resource = new ClassPathResource("velocity.properties");
 		Properties props = PropertiesLoaderUtils.loadProperties(resource);
@@ -99,7 +99,6 @@ public class GenerateNotification {
 			notifLogRepo.save(notifLog);
 		}
 
-		return null;
 	}
 	
 	public TemplateLink getTemplateLink(EventType eventType, Language lang, Preference pref){

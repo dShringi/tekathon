@@ -42,6 +42,7 @@ package com.mastek;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -55,6 +56,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import dao.AccPrefRepository;
+import dto.Account;
+import dto.AccountDetail;
 import dto.AccountOpenedEvnt;
 import dto.AccountPref;
 import dto.AmtSuspiciousEvnt;
@@ -108,9 +111,23 @@ public class EventSourceImpl implements EventSource {
 		String result = getUserDetail(srcEvnt.getCustomerId());
 		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
 		
+		String acctDetail = getOtherDetails(srcEvnt.getCustomerId());
+		AccountDetail accountDetail = gson.fromJson(acctDetail, AccountDetail.class);
+		
 		// generate notification component to populate evnt and customer details
 		generateNotification.setDataAttributes(srcEvnt.getMap());
 		generateNotification.setCustAttributes(customerDetail.getMap());
+		
+		List<Account> accounts = accountDetail.getAccounts();
+		for(Account account: accounts){
+			if(account.getAccountCode().equals(srcEvnt.getAccountNumber())){
+				Map<String, Object> dataAttributes = generateNotification.getDataAttributes();
+				dataAttributes.put("productType", account.getProductType());
+				dataAttributes.put("accountType", account.getAccountType());
+				generateNotification.setDataAttributes(dataAttributes);
+			}
+		}
+		
 		try {
 			generateNotification.generateNotification();
 		} catch (IOException e) {
