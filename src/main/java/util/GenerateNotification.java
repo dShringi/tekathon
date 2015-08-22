@@ -16,7 +16,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 public class GenerateNotification {
 	private Map<String, String> dataAttributes = new HashMap<String, String>();
 	private Map<String, String> custAttributes = new HashMap<String, String>();
-	
+
 	public Map<String, String> getDataAttributes() {
 		return dataAttributes;
 	}
@@ -30,25 +30,23 @@ public class GenerateNotification {
 		Properties props = PropertiesLoaderUtils.loadProperties(resource);
 		VelocityEngine ve = new VelocityEngine(props);
 		ve.init();
-		
+
 		Template t = ve.getTemplate("templates/email.vm", "UTF-8");
 		VelocityContext context = new VelocityContext();
-		
-		for (Map.Entry<String, String> entry : dataAttributes.entrySet())
-		{
+
+		for (Map.Entry<String, String> entry : dataAttributes.entrySet()) {
 			context.put(entry.getKey(), entry.getValue());
 		}
-		
+
 		// call cust api
-		//populate custAttributes
-		
-		for (Map.Entry<String, String> entry : custAttributes.entrySet())
-		{
+		// populate custAttributes
+
+		for (Map.Entry<String, String> entry : custAttributes.entrySet()) {
 			context.put("username", "usernaame frorm cust api");
 			context.put("productname", "product frorm cust api");
+			context.put(entry.getKey(), entry.getValue());
 		}
 
-		
 		StringWriter stringWriter = new StringWriter();
 		t.merge(context, stringWriter);
 		return stringWriter.toString();

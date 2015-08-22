@@ -41,21 +41,18 @@ package com.mastek;
 
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.stereotype.Component;
-
-import util.GenerateNotification;
 
 import com.google.gson.Gson;
 
 import dto.AccountOpenedEvnt;
-import dto.LocationSuspiciousEvnt;
-import dto.IntRateChangeEvnt;
 import dto.AmtSuspiciousEvnt;
+import dto.IntRateChangeEvnt;
+import dto.LocationSuspiciousEvnt;
 import dto.SourceEvent;
 import dto.TransactionEvnt;
+import util.GenerateNotification;
 
 /**
  * serviceimplementation to get source events
