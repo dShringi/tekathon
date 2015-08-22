@@ -148,10 +148,24 @@ public class EventSourceImpl implements EventSource {
 		// get user details
 		String result = getUserDetail(srcEvnt.getCustomerId());
 		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
-		
+
+		String acctDetail = getOtherDetails(srcEvnt.getCustomerId());
+		AccountDetail accountDetail = gson.fromJson(acctDetail, AccountDetail.class);
 		// generate notification component to populate evnt and customer details
 		generateNotification.setDataAttributes(srcEvnt.getMap());
 		generateNotification.setCustAttributes(customerDetail.getMap());
+		
+		List<Account> accounts = accountDetail.getAccounts();
+		for(Account account: accounts){
+			if(account.getAccountCode().equals(srcEvnt.getAccountNumber())){
+				Map<String, Object> dataAttributes = generateNotification.getDataAttributes();
+				dataAttributes.put("productType", account.getProductType());
+				dataAttributes.put("accountType", account.getAccountType());
+				generateNotification.setDataAttributes(dataAttributes);
+			}
+		}
+		
+
 		try {
 			generateNotification.generateNotification();
 		} catch (IOException e) {
@@ -171,9 +185,23 @@ public class EventSourceImpl implements EventSource {
 		String result = getUserDetail(srcEvnt.getCustomerId());
 		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
 		
+		String acctDetail = getOtherDetails(srcEvnt.getCustomerId());
+		AccountDetail accountDetail = gson.fromJson(acctDetail, AccountDetail.class);
+
 		// generate notification component to populate evnt and customer details
 		generateNotification.setDataAttributes(srcEvnt.getMap());
 		generateNotification.setCustAttributes(customerDetail.getMap());
+		List<Account> accounts = accountDetail.getAccounts();
+		for(Account account: accounts){
+			if(account.getAccountCode().equals(srcEvnt.getAccountNumber())){
+				Map<String, Object> dataAttributes = generateNotification.getDataAttributes();
+				dataAttributes.put("productType", account.getProductType());
+				dataAttributes.put("accountType", account.getAccountType());
+				generateNotification.setDataAttributes(dataAttributes);
+			}
+		}
+		
+
 		try {
 			generateNotification.generateNotification();
 		} catch (IOException e) {
@@ -191,7 +219,10 @@ public class EventSourceImpl implements EventSource {
 		// get user details
 		String result = getUserDetail(srcEvnt.getCustomerId());
 		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
-		
+
+		String acctDetail = getOtherDetails(srcEvnt.getCustomerId());
+		AccountDetail accountDetail = gson.fromJson(acctDetail, AccountDetail.class);
+
 		// generate notification component to populate evnt and customer details
 		generateNotification.setDataAttributes(srcEvnt.getMap());
 		generateNotification.setCustAttributes(customerDetail.getMap());
@@ -218,6 +249,21 @@ public class EventSourceImpl implements EventSource {
 		// generate notification component to populate evnt and customer details
 		generateNotification.setDataAttributes(srcEvnt.getMap());
 		generateNotification.setCustAttributes(customerDetail.getMap());
+
+		String acctDetail = getOtherDetails(srcEvnt.getCustomerId());
+		AccountDetail accountDetail = gson.fromJson(acctDetail, AccountDetail.class);
+		
+		List<Account> accounts = accountDetail.getAccounts();
+		for(Account account: accounts){
+			if(account.getAccountCode().equals(srcEvnt.getAccountNumber())){
+				Map<String, Object> dataAttributes = generateNotification.getDataAttributes();
+				dataAttributes.put("productType", account.getProductType());
+				dataAttributes.put("accountType", account.getAccountType());
+				generateNotification.setDataAttributes(dataAttributes);
+			}
+		}
+		
+
 		try {
 			generateNotification.generateNotification();
 		} catch (IOException e) {
@@ -241,6 +287,20 @@ public class EventSourceImpl implements EventSource {
 		// generate notification component to populate evnt and customer details
 		generateNotification.setDataAttributes(srcEvnt.getMap());
 		generateNotification.setCustAttributes(customerDetail.getMap());
+		String acctDetail = getOtherDetails(srcEvnt.getCustomerId());
+		AccountDetail accountDetail = gson.fromJson(acctDetail, AccountDetail.class);
+
+		List<Account> accounts = accountDetail.getAccounts();
+		for(Account account: accounts){
+			if(account.getAccountCode().equals(srcEvnt.getAccountNumber())){
+				Map<String, Object> dataAttributes = generateNotification.getDataAttributes();
+				dataAttributes.put("productType", account.getProductType());
+				dataAttributes.put("accountType", account.getAccountType());
+				generateNotification.setDataAttributes(dataAttributes);
+			}
+		}
+		
+
 		try {
 			generateNotification.generateNotification();
 		} catch (IOException e) {
