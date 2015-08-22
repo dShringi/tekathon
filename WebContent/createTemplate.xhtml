@@ -5,17 +5,17 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 
 <h:form >
-	 <p:layoutUnit position="west" resizable="true" size="100" minSize="40" maxSize="200">
+	 <p:layoutUnit position="west" resizable="true" size="100" minSize="40" maxSize="200" >
         <h3>Prefrences</h3>
         <h:selectOneMenu id="pref"  required="true" value="#{createTemplateBean.prefrence}"	label="Text 3" onchange="createTemplateBean.changePreference">
-				<f:selectItem itemLabel="Select One" itemValue=""
-					noSelectionOption="true" />
+				<f:selectItem itemLabel="Select One" itemValue=""	noSelectionOption="true" />
 				<f:selectItems value="#{createTemplateBean.prefrences}" />
+				<p:ajax  update="#{createTemplateBean.prefrence}" listener="#{createTemplateBean.changePref}" />
 		</h:selectOneMenu>
 		<h3>EventComponents</h3>
 		
 		<h:outputLabel value="You can use below components to create template."></h:outputLabel>
-		<p:selectManyCheckbox id="grid"	value="#{createTemplateBean.prefrenceComponets}" layout="grid" columns="3">
+		<p:selectManyCheckbox id="grid"	value="#{createTemplateBean.prefrenceComponets}" layout="grid" columns="3" rendered="#{createTemplateBean.prefrence=sms}"	>
 			<f:selectItems value="#{createTemplateBean.prefrenceComponets}"	var="componet" />
 		</p:selectManyCheckbox>
     </p:layoutUnit>
