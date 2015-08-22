@@ -39,14 +39,27 @@
  */
 package com.mastek;
 
+import java.util.List;
+
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import org.glassfish.jersey.client.ClientConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import dao.AccPrefRepository;
+import dto.AccountPref;
 
 @Path("rest")
 @Component
@@ -56,6 +69,9 @@ public class NotificationService {
     @Autowired
     private EventSource eventSrcService;
 
+    @Autowired
+	private AccPrefRepository acntPrefRepo;
+    
     @Path("getAccountOpened")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -93,14 +109,25 @@ public class NotificationService {
         return eventSrcService.getLocationSuspiciousEvent(srcevent);
     }
 
-
-    
+   
     @Path("getWithdrawnEvent")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getWithdrawnEvent(@QueryParam("srcevent") String srcevent ) {
         return eventSrcService.getWithdrawnEvent(srcevent);
     }
+    
 
+    @GET
+    @Path("/acctPref")
+    @Produces(MediaType.TEXT_PLAIN)
+	public Response getAcctPref(@Context HttpHeaders headers, @QueryParam("acctNo") String acctNo){
+		List<AccountPref> acctPref = acntPrefRepo.findByAcctNo(acctNo);
+		String result = acctPref.get(0).getEmail();
+		return Response.status(201).entity(result).build();
+	}
+
+    
+    
     
 }

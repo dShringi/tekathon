@@ -76,9 +76,9 @@ public class SourceEvent {
 		return builder.toString();
 	}
 
-	public Map<String,String> getMap()
+	public Map<String,Object> getMap()
 	{
-		Map<String,String> attributes = new HashMap<String, String>();
+		Map<String,Object> attributes = new HashMap<String, Object>();
 		attributes.put("MessageId", this.getMessageId());
 		attributes.put("AccountNumber", this.getAccountNumber());
 		attributes.put("EventCategory", this.getEventCategory());

@@ -19,7 +19,6 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +26,7 @@ import com.google.gson.Gson;
 
 import dao.AccPrefRepository;
 import dao.NPLRepository;
+import dao.TemplateRepository;
 import dto.AccountPref;
 import dto.EventType;
 import dto.Language;
@@ -45,6 +45,9 @@ public class SpringSingletonResource {
 
 	@Autowired
 	private AccPrefRepository acntPrefRepo;
+	
+	@Autowired
+	private TemplateRepository templateRepo;
 
 	// Consume JSON
 	// Use data and push in map
@@ -129,5 +132,16 @@ public class SpringSingletonResource {
 		return Response.status(201).entity(result).build();
 	}
 	
-	
+
+	@POST
+	@Path("/add-template")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addTemplate(String data) {
+		Gson gson = new Gson();
+		TemplateLink templateLink = gson.fromJson(data, TemplateLink.class);
+		String result = ""+templateLink;
+		templateRepo.save(templateLink);
+		return Response.status(201).entity(result).build();
+	}
+
 }

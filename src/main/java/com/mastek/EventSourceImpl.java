@@ -41,17 +41,27 @@ package com.mastek;
 
 
 import java.io.IOException;
+import java.util.List;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.MediaType;
+
+import org.glassfish.jersey.client.ClientConfig;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import dto.AccountOpenedEvnt;
+import dto.AccountPref;
 import dto.AmtSuspiciousEvnt;
 import dto.IntRateChangeEvnt;
 import dto.LocationSuspiciousEvnt;
 import dto.SourceEvent;
 import dto.TransactionEvnt;
+import util.Contact;
+import util.CustomerDetail;
 import util.GenerateNotification;
 
 /**
@@ -165,8 +175,15 @@ public class EventSourceImpl implements EventSource {
 		// TODO Auto-generated method stub
 		Gson gson = new Gson();
 		AmtSuspiciousEvnt srcEvnt = gson.fromJson(srcevent, AmtSuspiciousEvnt.class);
+
+		String result = getUserDetail(srcEvnt.getCustId());
+		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
+		
 		GenerateNotification genNotification = new GenerateNotification();
 		genNotification.setDataAttributes(srcEvnt.getMap());
+		genNotification.setCustAttributes(customerDetail.getMap());
+		
+		
 		try {
 			genNotification.generateNotification();
 		} catch (IOException e) {
@@ -175,4 +192,15 @@ public class EventSourceImpl implements EventSource {
 		System.out.println("Amount Suspicious notification done");
         return srcEvnt.toString(); 
 	}
+
+	// Service to get Customer Details for notification.
+	private String getUserDetail(String custid) {
+		String link = "http://104.131.44.187:8081/CxfRestService/rest/customerservices/getcustomerdetails";
+		Client client = ClientBuilder.newClient(new ClientConfig());
+		String userDetail = client.target(link).queryParam("customerId", custid)
+				.request(MediaType.APPLICATION_JSON).get(String.class);
+		return userDetail;
+	}
+
+
 }

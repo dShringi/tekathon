@@ -3,54 +3,111 @@ package util;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Component;
 
+import dao.AccPrefRepository;
+import dto.AccountPref;
+import dto.EventType;
+import dto.Language;
+import dto.Preference;
+import dto.TemplateLink;
+
+@Component
+@Scope("prototype")
 public class GenerateNotification {
-	private Map<String, String> dataAttributes = new HashMap<String, String>();
-	private Map<String, String> custAttributes = new HashMap<String, String>();
-
-	public Map<String, String> getDataAttributes() {
-		return dataAttributes;
-	}
-
-	public void setDataAttributes(Map<String, String> dataAttributes) {
-		this.dataAttributes = dataAttributes;
-	}
-
+	
+	@Autowired
+	public AccPrefRepository acntPrefRepo;
+	
+	@Autowired
+	public MongoTemplate template;
+	
+	private Map<String, Object> dataAttributes = new HashMap<String, Object>();
+	private Map<String, Object> custAttributes = new HashMap<String, Object>();
+	private AccountPref accntPref = null; 
+	
 	public String generateNotification() throws IOException {
+		
 		Resource resource = new ClassPathResource("velocity.properties");
 		Properties props = PropertiesLoaderUtils.loadProperties(resource);
 		VelocityEngine ve = new VelocityEngine(props);
 		ve.init();
 
-		Template t = ve.getTemplate("templates/email.vm", "UTF-8");
 		VelocityContext context = new VelocityContext();
-
-		for (Map.Entry<String, String> entry : dataAttributes.entrySet()) {
+		
+		for (Map.Entry<String, Object> entry : dataAttributes.entrySet()) {
 			context.put(entry.getKey(), entry.getValue());
 		}
-
-		// call cust api
-		// populate custAttributes
-
-		for (Map.Entry<String, String> entry : custAttributes.entrySet()) {
-			context.put("username", "usernaame frorm cust api");
-			context.put("productname", "product frorm cust api");
+		
+		for (Map.Entry<String, Object> entry : custAttributes.entrySet()) {
 			context.put(entry.getKey(), entry.getValue());
 		}
+		
+		
+		EventType eventType = (EventType) dataAttributes.get("eventType");
+		accntPref = getAcctPref(""+context.get("accountNumber"));
+		List<Preference> prefs = accntPref.getPrefs();
+		Language lang = accntPref.getLanguage();
+		boolean notify = accntPref.isNotify();
+		
+		
+		for(Preference pref: prefs) {
+			TemplateLink templateLink = getTemplateLink(eventType, lang, pref);
+			Template t = ve.getTemplate("templates/"+templateLink.getTemplateName(), "UTF-8");
+			
+			StringWriter stringWriter = new StringWriter();
+			t.merge(context, stringWriter);
+			return stringWriter.toString();
+		}
 
-		StringWriter stringWriter = new StringWriter();
-		t.merge(context, stringWriter);
-		return stringWriter.toString();
+		return null;
+	}
+	
+	private TemplateLink getTemplateLink(EventType eventType, Language language, Preference pref){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("eventType").is(eventType.toString()));
+		query.addCriteria(Criteria.where("language").is(language.toString()));
+		query.addCriteria(Criteria.where("pref").is(pref.toString()));
+		List<TemplateLink> tempLink = template.find(query, TemplateLink.class);
+		return tempLink.get(0);
+	}
 
+	
+	public AccountPref getAcctPref(String acctNumber) {
+		List<AccountPref> acctPref = acntPrefRepo.findByAcctNo(acctNumber);
+		return acctPref.get(0);
+	}
+
+	 
+	public Map<String, Object> getCustAttributes() {
+		return custAttributes;
+	}
+
+	public void setCustAttributes(Map<String, Object> custAttributes) {
+		this.custAttributes = custAttributes;
+	}
+
+	public Map<String, Object> getDataAttributes() {
+		return dataAttributes;
+	}
+
+	public void setDataAttributes(Map<String, Object> dataAttributes) {
+		this.dataAttributes = dataAttributes;
 	}
 
 }

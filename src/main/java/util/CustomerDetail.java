@@ -107,4 +107,14 @@ public class CustomerDetail {
 		this.additionalProperties.put(name, value);
 	}
 
+	public Map<String,Object> getMap()
+	{
+		Map<String,Object> attributes = new HashMap<String, Object>();
+		attributes.put("id", this.getId());
+		attributes.put("active", this.getActive());
+		attributes.put("fname", this.getFname());
+		attributes.put("lname", this.getLname());
+		attributes.put("contacts", this.getContacts());
+		return attributes;
+	}
 }
