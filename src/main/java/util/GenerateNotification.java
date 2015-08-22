@@ -137,7 +137,7 @@ public class GenerateNotification {
 	
 	//Service to invoke dispatcher
 	private void invokeDispatcher(NotificationLog log){
-		String link = "http://104.131.44.187:8081/CxfRestService/rest/customerservices/getcustomeraccountdetails";
+		String link = "http://192.168.15.11:8282/dispatchMessage";
 		Gson gson = new Gson();
 		String data = gson.toJson(log);
 		Client client = ClientBuilder.newClient(new ClientConfig());
