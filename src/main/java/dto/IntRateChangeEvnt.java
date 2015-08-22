@@ -11,16 +11,24 @@ public class IntRateChangeEvnt {
 	String EffectiveDate;
 	Float  OldInterestRate;
 	Float  NewInterestRate;
-	String CustId;
+	String customerId;
+	String teamId;
 	
-	public String getCustId() {
-		return CustId;
+	public String getCustomerId() {
+		return customerId;
 	}
 
-	public void setCustId(String custId) {
-		CustId = custId;
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
 	}
 
+	public String getTeamId() {
+		return teamId;
+	}
+
+	public void setTeamId(String teamId) {
+		this.teamId = teamId;
+	}
 	
 	public String getMessageId() {
 		return MessageId;
@@ -88,7 +96,8 @@ public class IntRateChangeEvnt {
 		attributes.put("IntChangeEffectiveDt", this.getEffectiveDate());
 		attributes.put("OldInterestRate",Float.toString(this.getOldInterestRate()));
 		attributes.put("OldInterestRate",Float.toString(this.getNewInterestRate()));
-		attributes.put("customerId",getCustId());
+		attributes.put("customerId",getCustomerId());
+		attributes.put("teamId",getTeamId());
 
 		return attributes;
 	}
