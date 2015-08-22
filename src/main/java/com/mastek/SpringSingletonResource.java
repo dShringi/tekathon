@@ -43,20 +43,20 @@ public class SpringSingletonResource {
 		nplRepository.save(payload);
 		String result = "Data post : " + payload.getName();
 
-		try {
-			result = new GenerateNotification().generateNotification();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			result = new GenerateNotification().generateNotification();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
-		result = getUserDetail();
-		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
-		List<Contact> contacts = customerDetail.getContacts();
-		for (Contact contact : contacts) {
-			if (contact.getContactType().equalsIgnoreCase("email")) {
-				result = contact.getContact();
-			}
-		}
+//		result = getUserDetail();
+//		CustomerDetail customerDetail = gson.fromJson(result, CustomerDetail.class);
+//		List<Contact> contacts = customerDetail.getContacts();
+//		for (Contact contact : contacts) {
+//			if (contact.getContactType().equalsIgnoreCase("email")) {
+//				result = contact.getContact();
+//			}
+//		}
 
 		return Response.status(201).entity(result).build();
 	}
@@ -70,6 +70,7 @@ public class SpringSingletonResource {
 		return userDetail;
 	}
 
+	
 	@POST
 	@Path("/accpref")
 	@Consumes(MediaType.APPLICATION_JSON)
