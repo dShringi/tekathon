@@ -62,7 +62,6 @@ public class GenerateNotification {
 	
 
 		this.accntPrefList= acntPrefRepo.findByAcctNo(context.get("AccountNumber")+"");
-		
 		AccountPref accntPref = accntPrefList.get(0);
 		
 		List<Preference> prefs = accntPref.getPrefs();
