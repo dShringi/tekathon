@@ -2,6 +2,7 @@ package util;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +21,11 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import dao.AccPrefRepository;
+import dao.NotifLogRepository;
 import dto.AccountPref;
 import dto.EventType;
 import dto.Language;
+import dto.NotificationLog;
 import dto.Preference;
 import dto.TemplateLink;
 
@@ -34,6 +37,9 @@ public class GenerateNotification {
 	
 	@Autowired
 	public MongoTemplate template;
+	
+	@Autowired
+	public NotifLogRepository notifLogRepo;
 	
 	private Map<String, Object> dataAttributes = new HashMap<String, Object>();
 	private Map<String, Object> custAttributes = new HashMap<String, Object>();
@@ -76,7 +82,22 @@ public class GenerateNotification {
 			
 			StringWriter stringWriter = new StringWriter();
 			t.merge(context, stringWriter);
-			System.out.println(stringWriter.toString());
+			String notificaiton = stringWriter.toString();
+			System.out.println(notificaiton);
+			
+			NotificationLog notifLog = new NotificationLog();
+			notifLog.setAccountNumber(context.get("AccountNumber")+"");
+			notifLog.setDate(new Date()+"");
+			notifLog.setPref(pref);
+			notifLog.setNotification(notificaiton);
+			if(pref.equals(Preference.SMS)){
+				notifLog.setCommunicationId(accntPref.getSms());
+			} else if(pref.equals(Preference.EMAIL)){
+				notifLog.setCommunicationId(accntPref.getEmail());
+			} else {
+				notifLog.setCommunicationId("INAPP");
+			}
+			notifLogRepo.save(notifLog);
 		}
 
 		return null;
