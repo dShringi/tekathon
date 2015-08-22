@@ -39,11 +39,14 @@
  */
 package com.mastek;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -57,49 +60,62 @@ public class NotificationService {
     private EventSource eventSrcService;
 
     @Path("getAccountOpened")
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getAccountOpened(@QueryParam("srcevent") String srcevent ) {
-        return eventSrcService.getAcctOpenedEvent(srcevent);
+    @POST
+	@Consumes(MediaType.APPLICATION_JSON)
+    public Response getAccountOpened(String srcevent ) {
+    	
+    	String result = eventSrcService.getAcctOpenedEvent(srcevent);
+    	System.out.println(result);
+    	return Response.status(201).build();
     }
     
     @Path("getAmtSuspiciousEvent")
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getAmtSuspiciousEvent(@QueryParam("srcevent") String srcevent ) {
-        return eventSrcService.getAmtSuspiciousEvent(srcevent);
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAmtSuspiciousEvent(String srcevent ) {
+        String result = eventSrcService.getAmtSuspiciousEvent(srcevent);
+        System.out.println(result);
+        return Response.status(201).build();
     }
 
     @Path("getFundedEvent")
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getFundedEvent(@QueryParam("srcevent") String srcevent ) {
-        return eventSrcService.getFundedEvent(srcevent);
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getFundedEvent(String srcevent ) {
+    	String result = eventSrcService.getFundedEvent(srcevent);
+    	System.out.println(result);
+    	return Response.status(201).build();
     }
 
     
     @Path("getIntRateChangeEvent")
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getsrcevent(@QueryParam("srcevent") String srcevent ) {
-        return eventSrcService.getIntRateChangeEvent(srcevent);
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getsrcevent(String srcevent ) {
+        String result = eventSrcService.getIntRateChangeEvent(srcevent);
+        System.out.println(result);
+       	return Response.status(201).build();
     }
 
     
     @Path("getLocationSuspiciousEvent")
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getLocationSuspiciousEvent(@QueryParam("srcevent") String srcevent ) {
-        return eventSrcService.getLocationSuspiciousEvent(srcevent);
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getLocationSuspiciousEvent(String srcevent ) {
+         String result = eventSrcService.getLocationSuspiciousEvent(srcevent);
+         System.out.println(result);
+         return Response.status(201).build();
     }
 
 
     
     @Path("getWithdrawnEvent")
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getWithdrawnEvent(@QueryParam("srcevent") String srcevent ) {
-        return eventSrcService.getWithdrawnEvent(srcevent);
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getWithdrawnEvent(String srcevent ) {
+        String result = eventSrcService.getWithdrawnEvent(srcevent);
+        System.out.println(result);
+        return Response.status(201).build();
     }
 
     
